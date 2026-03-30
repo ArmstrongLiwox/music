@@ -1,32 +1,27 @@
-import { defineCollection, reference, z } from 'astro:content';
+import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-const artists = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: "./src/data/artists" }),
+const tracks = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: "./src/data/tracks" }),
   schema: z.object({
-    name: z.string(),
-    stage_name: z.string(),
+    title: z.string(),
+    tagline: z.string(),
     genre: z.string(),
+    releaseDate: z.date(),
     image: z.object({
       src: z.string(),
       alt: z.string(),
     }),
-  }),
-});
- 
-const albums = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: "./src/data/albums" }),
-  schema: z.object({
-    name: z.string(),
-    image: z.object({
-      src: z.string(),
-      alt: z.string(),
+    streaming: z.object({
+      spotify: z.string().url().optional(),
+      apple_music: z.string().url().optional(),
+      youtube: z.string().url().optional(),
+      tidal: z.string().url().optional(),
+      amazon_music: z.string().url().optional(),
+      bmi_registered: z.boolean().default(false),
     }),
-    publishDate: z.date(), // e.g. 2024-09-17
-    tracks: z.array(z.string()),
-    artist: reference('artists'),
+    featured: z.boolean().default(false),
   }),
 });
 
-// Export all collections
-export const collections = {artists, albums};
+export const collections = { tracks };
